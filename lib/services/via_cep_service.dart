@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:app_cep_turma/result_cep.dart';
+import 'package:app_cep_turma/models/result_cep.dart';
 
 class ViaCepService {
   static Future<ResultCep> fetchCep({String? cep}) async {

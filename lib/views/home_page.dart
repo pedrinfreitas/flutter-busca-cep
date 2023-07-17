@@ -1,13 +1,15 @@
-import 'package:app_cep_turma/via_cep_service.dart';
+import 'package:app_cep_turma/services/via_cep_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  var _searchCepController = TextEditingController();
+  final _searchCepController = TextEditingController();
   bool _loading = false;
   bool _enableField = true;
   String? _result;
@@ -22,15 +24,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Consultar CEP'),
+        title: const Text('Consultar CEP'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             _buildSearchCepTextField(),
             _buildSearchCepButton(),
+            _buildCleanCepButton(),
             _buildResultForm()
           ],
         ),
@@ -43,7 +46,7 @@ class _HomePageState extends State<HomePage> {
       autofocus: true,
       keyboardType: TextInputType.number,
       textInputAction: TextInputAction.done,
-      decoration: InputDecoration(labelText: 'Cep'),
+      decoration: const InputDecoration(labelText: 'Cep'),
       controller: _searchCepController,
       enabled: _enableField,
     );
@@ -54,7 +57,16 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(top: 20.0),
         child: ElevatedButton(
           onPressed: _searchCep,
-          child: _loading ? _circularLoading() : Text('Consultar'),
+          child: _loading ? _circularLoading() : const Text('Consultar'),
+        ));
+  }
+
+  Widget _buildCleanCepButton() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 20.0),
+        child: ElevatedButton(
+          onPressed: _clearButton,
+          child: _loading ? _circularLoading() : const Text('Limpar'),
         ));
   }
 
@@ -70,7 +82,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 15.0,
       width: 15.0,
-      child: CircularProgressIndicator(),
+      child: const CircularProgressIndicator(),
     );
   }
 
@@ -89,9 +101,20 @@ class _HomePageState extends State<HomePage> {
     _searching(false);
   }
 
+  Future _clearButton() async {
+    _searching(true);
+
+    setState(() {
+      _searchCepController.text = '';
+      _result = '';
+    });
+
+    _searching(false);
+  }
+
   Widget _buildResultForm() {
     return Container(
-      padding: EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 20.0),
       child: Text(_result ?? ''),
     );
   }

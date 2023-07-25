@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_cep_turma/services/via_cep_service.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +15,7 @@ class _HomePageState extends State<HomePage> {
   bool _loading = false;
   bool _enableField = true;
   String? _result;
+  dynamic? responseData;
 
   @override
   void dispose() {
@@ -96,6 +99,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _result = resultCep.toJson();
+      responseData = jsonDecode(resultCep.toJson());
     });
 
     _searching(false);
@@ -107,15 +111,57 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _searchCepController.text = '';
       _result = '';
+      responseData = null;
     });
 
     _searching(false);
   }
 
   Widget _buildResultForm() {
+    String mensagem = "Digite o cep e clique em consultar";
+    if (responseData != null) {
+      return Column(children: [
+        TextField(
+          decoration: const InputDecoration(labelText: 'CEP'),
+          controller: TextEditingController(text: responseData['cep']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'Logradouro'),
+          controller: TextEditingController(text: responseData['logradouro']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'Complemento'),
+          controller: TextEditingController(text: responseData['complemento']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'Bairro'),
+          controller: TextEditingController(text: responseData['bairro']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'Localidade'),
+          controller: TextEditingController(text: responseData['localidade']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'UF'),
+          controller: TextEditingController(text: responseData['uf']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'IBGE'),
+          controller: TextEditingController(text: responseData['ibge']),
+        ),
+        TextField(
+          decoration: const InputDecoration(labelText: 'GIA'),
+          controller: TextEditingController(text: responseData['gia']),
+        ),
+      ]);
+    }
     return Container(
       padding: const EdgeInsets.only(top: 20.0),
-      child: Text(_result ?? ''),
+      child: Text(mensagem),
     );
   }
+
+  // return Container(
+  //     padding: const EdgeInsets.only(top: 20.0),
+  //     child: Text(_result ?? ''),
 }
